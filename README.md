@@ -12,7 +12,7 @@ This dashboard contains multiples sections with the goal to monitor a full Zimbr
 
 Download the zimbra-pflogsumm.pl Script from this repository and save it on the next path: 
 ```
-/opt/zimbra/common/bin/zimbra-pfglogsumm.pl
+/opt/zimbra/common/bin/zimbra-pflogsumm.pl
 ```
 This Script monitors:
 Zimbra Collaboration Performance
