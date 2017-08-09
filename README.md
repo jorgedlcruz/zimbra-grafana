@@ -108,8 +108,6 @@ Sample /etc/telegraf/telegraf.conf with inputs for Zimbra Processes, Zimbra Scri
   data_type = "string"
 ```
 
-![alt tag](https://www.jorgedelacruz.es/wp-content/uploads/2017/07/telegraf-service.png)
-
 * Download the grafana-zimbra-collaboration-dashboard.json JSON file and import it into your Grafana
 * Change your data inside the Grafana if needed and enjoy :)
 
