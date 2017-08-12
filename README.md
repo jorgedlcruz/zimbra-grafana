@@ -10,9 +10,10 @@ This project uses a modified version of the popular pflogsumm script to retrieve
 ### Getting started
 This dashboard contains multiples sections with the goal to monitor a full Zimbra Collaboration Server or Servers, we have some sections to monitor the Linux and machine overall performance, and one dedicated section just to monitor Zimbra Collaboration. Special thanks to Lex Rivera for his Linux System dashboard - https://grafana.com/orgs/lex
 
-Download the zimbra-pflogsumm.pl Script from this repository and save it on the next path: 
+Download the zimbra_pflogsumm.pl Script from this repository and save it on the next path: 
 ```
-/opt/zimbra/common/bin/zimbra-pflogsumm.pl
+/opt/zimbra/common/bin/zimbra_pflogsumm.pl
+chmod +x /opt/zimbra/common/bin/zimbra_pflogsumm.pl
 ```
 This Script monitors:
 Zimbra Collaboration Performance
