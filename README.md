@@ -98,7 +98,7 @@ Sample /etc/telegraf/telegraf.conf with inputs for Zimbra Processes, Zimbra Scri
 [[inputs.net]]
 
 [[inputs.exec]]
-  commands = ["/opt/zimbra/common/bin/zimbra-pflogsumm.pl -d today /var/log/zimbra.log"]
+  commands = ["/opt/zimbra/common/bin/zimbra_pflogsumm.pl -d today /var/log/zimbra.log"]
   name_override = "zimbra_stats"
   data_format = "influx"
 
