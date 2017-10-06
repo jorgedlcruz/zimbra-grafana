@@ -10,14 +10,16 @@ This project uses a modified version of the popular pflogsumm script to retrieve
 ### Getting started
 This dashboard contains multiples sections with the goal to monitor a full Zimbra Collaboration Server or Servers, we have some sections to monitor the Linux and machine overall performance, and one dedicated section just to monitor Zimbra Collaboration. Special thanks to Lex Rivera for his Linux System dashboard - https://grafana.com/orgs/lex
 
-Download the zimbra_pflogsumm.pl Script from this repository and save it on the next path: 
+Download the zimbra_pflogsumm.pl and the checkzimbraversion.sh scripts from this repository and save it on the next path: 
 ```
 /opt/zimbra/common/bin/zimbra_pflogsumm.pl
+/opt/zimbra/common/bin/checkzimbraversion.sh
 chmod +x /opt/zimbra/common/bin/zimbra_pflogsumm.pl
+chmod +x /opt/zimbra/common/bin/checkzimbraversion.sh
 ```
-This Script monitors:
+These scripts monitors:
 Zimbra Collaboration Performance
-* ZCS Version
+* ZCS Version (Only 8.7 and above)
 * Received Megabytes
 * Delivered Megabytes
 * Total Emails/received
@@ -103,7 +105,7 @@ Sample /etc/telegraf/telegraf.conf with inputs for Zimbra Processes, Zimbra Scri
   data_format = "influx"
 
 [[inputs.exec]]
-  commands = ["sed 's/........................//' /opt/zimbra/jetty/webapps/zimbra/downloads/.git/HEAD"]
+  commands = ["/opt/zimbra/common/bin/checkzimbraversion.sh"]
   name_override = "zimbra_stats"
   data_format = "value"
   data_type = "string"
@@ -115,7 +117,7 @@ Sample /etc/telegraf/telegraf.conf with inputs for Zimbra Processes, Zimbra Scri
 ----------
 
 ### Coming next
-This is just a v0.1 of this Dashboard, the next step will be to use the Zimbra SOAP API to obtain some extra information from the Zimbra Collaboration Environment, like:
+This is just a v0.2 of this Dashboard, the next step will be to use the Zimbra SOAP API to obtain some extra information from the Zimbra Collaboration Environment, like:
 * Number of Active Users
 * Number of Inactive Users
 * Number of Domains
