@@ -3,6 +3,8 @@ How to monitor a Zimbra Collaboration Environment using pflogsumm, Telegraf, Inf
 
 ![alt tag](https://www.jorgedelacruz.es/wp-content/uploads/2017/08/zimbra-grafana-001.png)
 
+*Note: This project is a Community contribution, not tested neither supported officialy by Zimbra. Use it at your own risk. It might perform poorly in big environments due the need to parse the MTA logs over and over.
+
 This project uses a modified version of the popular pflogsumm script to retrieve the Zimbra collaboration email queues information, and creates an output which we send to InfluxDB using Telegraf, then in Grafana: a Dashboard is created to present all the information.
 
 ----------
