@@ -943,25 +943,25 @@ if(my $msgsTotal = $msgsDlvrd + $msgsRjctd + $msgsDscrdd) {
 if(defined($dateStr)) {
 }
 
-printf "zimbra-stats received=%d%s\n", adj_int_units($msgsRcvd);
-printf "zimbra-stats delivered=%d%s\n", adj_int_units($msgsDlvrd);
-printf "zimbra-stats forwarded=%d%s\n", adj_int_units($msgsFwdd);
-printf "zimbra-stats deferred=%d%s\n", adj_int_units($msgsDfrd);
-printf "zimbra-stats bounced=%d%s\n", adj_int_units($msgsBncd);
-printf "zimbra-stats rejected=%d%s\n", adj_int_units($msgsRjctd);
-printf "zimbra-stats reject_warnings=%d%s\n", adj_int_units($msgsWrnd);
-printf "zimbra-stats held=%d%s\n", adj_int_units($msgsHld);
-printf "zimbra-stats discarded=%d%s\n", adj_int_units($msgsDscrdd);
+printf "zimbra-stats received=%d\n", adj_int_units($msgsRcvd);
+printf "zimbra-stats delivered=%d\n", adj_int_units($msgsDlvrd);
+printf "zimbra-stats forwarded=%d\n", adj_int_units($msgsFwdd);
+printf "zimbra-stats deferred=%d\n", adj_int_units($msgsDfrd);
+printf "zimbra-stats bounced=%d\n", adj_int_units($msgsBncd);
+printf "zimbra-stats rejected=%d\n", adj_int_units($msgsRjctd);
+printf "zimbra-stats reject_warnings=%d\n", adj_int_units($msgsWrnd);
+printf "zimbra-stats held=%d\n", adj_int_units($msgsHld);
+printf "zimbra-stats discarded=%d\n", adj_int_units($msgsDscrdd);
 printf "zimbra-stats bytes_received=%d\n", adj_int_units($sizeRcvd);
 printf "zimbra-stats bytes_delivered=%d\n", adj_int_units($sizeDlvrd);
-printf "zimbra-stats senders=%d%s\n", adj_int_units($sendgUserCnt);
-printf "zimbra-stats sending_hosts_domains=%d%s\n", adj_int_units($sendgDomCnt);
-printf "zimbra-stats recipients=%d%s\n", adj_int_units($recipUserCnt);
-printf "zimbra-stats recipient_hosts_domains=%d%s\n", adj_int_units($recipDomCnt);
+printf "zimbra-stats senders=%d\n", adj_int_units($sendgUserCnt);
+printf "zimbra-stats sending_hosts_domains=%d\n", adj_int_units($sendgDomCnt);
+printf "zimbra-stats recipients=%d\n", adj_int_units($recipUserCnt);
+printf "zimbra-stats recipient_hosts_domains=%d\n", adj_int_units($recipDomCnt);
 
 if(defined($opts{'smtpdStats'})) {
-printf "zimbra-stats connections=%d%s\n", adj_int_units($smtpdConnCnt);
-printf "zimbra-stats hosts_domains=%d%s\n", adj_int_units(int(keys %smtpdPerDom));
+printf "zimbra-stats connections=%d\n", adj_int_units($smtpdConnCnt);
+printf "zimbra-stats hosts_domains=%d\n", adj_int_units(int(keys %smtpdPerDom));
 }
 
 
