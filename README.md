@@ -1,41 +1,30 @@
 How to monitor a Zimbra Collaboration Environment using pflogsumm, Telegraf, InfluxDB and Grafana
 ===================
 
-![alt tag](https://www.jorgedelacruz.es/wp-content/uploads/2017/08/zimbra-grafana-001.png)
+![alt tag](![alt tag](https://www.jorgedelacruz.es/wp-content/uploads/2019/09/zimbra-monitoring-grafana-001.png))
 
-*Note: This project is a Community contribution, not tested neither supported officialy by Zimbra. Use it at your own risk. It might perform poorly in big environments due the need to parse the MTA logs over and over.
-
-This project uses a modified version of the popular pflogsumm script to retrieve the Zimbra collaboration email queues information, and creates an output which we send to InfluxDB using Telegraf, then in Grafana: a Dashboard is created to present all the information.
+*Note: This project is a Community contribution, not tested neither supported officialy by Zimbra. Use it at your own risk. 
 
 ----------
 
 ### Getting started
-This dashboard contains multiples sections with the goal to monitor a full Zimbra Collaboration Server or Servers, we have some sections to monitor the Linux and machine overall performance, and one dedicated section just to monitor Zimbra Collaboration. Special thanks to Lex Rivera for his Linux System dashboard - https://grafana.com/orgs/lex
+This dashboard contains multiples sections with the goal to monitor a full Zimbra Collaboration Server or Servers, we have some sections to monitor the Linux and machine overall performance, and one dedicated section just to monitor Zimbra Collaboration. Special thanks to [Lex Rivera for his Linux System dashboard](https://grafana.com/orgs/lex)
 
-Download the zimbra_pflogsumm.pl and the checkzimbraversion.sh scripts from this repository and save it on the next path: 
+Download the checkzimbraversion.sh scripts from the [GitHub repository](https://github.com/jorgedlcruz/zimbra-grafana) and save it on the next path: 
 ```
-/opt/zimbra/common/bin/zimbra_pflogsumm.pl
 /opt/zimbra/common/bin/checkzimbraversion.sh
-chmod +x /opt/zimbra/common/bin/zimbra_pflogsumm.pl
 chmod +x /opt/zimbra/common/bin/checkzimbraversion.sh
 ```
-These scripts monitors:
+More information available in: [https://github.com/jorgedlcruz/zimbra-grafana](https://github.com/jorgedlcruz/zimbra-grafana)
+
 Zimbra Collaboration Performance
 * ZCS Version (Only 8.7 and above)
 * Received Megabytes
-* Delivered Megabytes
 * Total Emails/received
-* Total Emails/Delivered
-* Total Recipients
-* Total Senders
-* Forwarded
 * Deferred
-* Bounced
-* Rejected
 * Held
-* Discarded
-* Domains Receiving Emails
-* Domains Sending Emails
+* Incoming
+* Maildrop
 
 Linux and machine performance:
 * CPUs (defaults to all)
@@ -43,40 +32,38 @@ Linux and machine performance:
 * Network interfaces (packets, bandwidth, errors/drops)
 * Mountpoints (space / inodes)
 
-### Collector Config
+### Coming next
+This is just a v0.3 of this Dashboard, the next step will be to use the Zimbra SOAP API to obtain some extra information from the Zimbra Collaboration Environment, like:
+* Number of Active Users
+* Number of Inactive Users
+* Number of Domains
+* Number of Users with ActiveSync
+* etc.
 
-Sample /etc/telegraf/telegraf.conf with inputs for Zimbra Processes, Zimbra Scripts, and Linux System Monitoring:
+### Collector Config
+Sample /etc/telegraf.d/zimbra.conf with inputs for Zimbra Processes, Zimbra Scripts, and Linux System Monitoring:
 
 ```
 # Read metrics about cpu usage
 [[inputs.cpu]]
-  ## Whether to report per-cpu stats or not
   percpu = true
-  ## Whether to report total system cpu stats or not
   totalcpu = true
-  ## Comment this line if you want the raw CPU time metrics
   fielddrop = ["time_*"]
 
 # Read metrics about disk usage by mount point
 [[inputs.disk]]
   ignore_fs = ["tmpfs", "devtmpfs"]
 
-# Read metrics about disk IO by device
 [[inputs.diskio]]
 
-# Get kernel statistics from /proc/stat
 [[inputs.kernel]]
 
-# Read metrics about memory usage
 [[inputs.mem]]
 
-# Get the number of processes and group them by status
 [[inputs.processes]]
 
-# Read metrics about swap memory usage
 [[inputs.swap]]
 
-# Read metrics about system load & uptime
 [[inputs.system]]
 
 [[inputs.procstat]]
@@ -102,15 +89,24 @@ Sample /etc/telegraf/telegraf.conf with inputs for Zimbra Processes, Zimbra Scri
 [[inputs.net]]
 
 [[inputs.exec]]
-  commands = ["/opt/zimbra/common/bin/zimbra_pflogsumm.pl -d today /var/log/zimbra.log"]
-  name_override = "zimbra_stats"
-  data_format = "influx"
-
-[[inputs.exec]]
   commands = ["/opt/zimbra/common/bin/checkzimbraversion.sh"]
   name_override = "zimbra_stats"
   data_format = "value"
   data_type = "string"
+
+# # OpenLDAP cn=Monitor plugin
+# # As zimbra user run the next to obatin the password zmlocalconfig -s zimbra_ldap_password ldap_master_url
+ [[inputs.openldap]]
+   host = "YOURZIMBRASERVERHOSTNAME"
+   port = 389
+   insecure_skip_verify = true
+   bind_dn = "uid=zimbra,cn=admins,cn=zimbra"
+   bind_password = "YOURZIMBRALDAPPASSWORD"
+   reverse_metric_names = true
+
+ [[inputs.postfix]]
+    queue_directory = "/opt/zimbra/data/postfix/spool"
+    interval = "1s"
 ```
 
 * Download the grafana-zimbra-collaboration-dashboard.json JSON file and import it into your Grafana
@@ -119,7 +115,7 @@ Sample /etc/telegraf/telegraf.conf with inputs for Zimbra Processes, Zimbra Scri
 ----------
 
 ### Coming next
-This is just a v0.2 of this Dashboard, the next step will be to use the Zimbra SOAP API to obtain some extra information from the Zimbra Collaboration Environment, like:
+This is just a v0.3 of this Dashboard, the next step will be to use the Zimbra SOAP API to obtain some extra information from the Zimbra Collaboration Environment, like:
 * Number of Active Users
 * Number of Inactive Users
 * Number of Domains
@@ -127,12 +123,3 @@ This is just a v0.2 of this Dashboard, the next step will be to use the Zimbra S
 * etc.
 
 In next versions we will parse directly the logs and put the attempts of logins, and successful logins on a map.
-
-## Distributed under MIT license
-Copyright (c) 2017 Jorge de la Cruz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
