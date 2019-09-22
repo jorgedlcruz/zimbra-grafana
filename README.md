@@ -1,7 +1,7 @@
 How to monitor a Zimbra Collaboration Environment using pflogsumm, Telegraf, InfluxDB and Grafana
 ===================
 
-![alt tag](![alt tag](https://www.jorgedelacruz.es/wp-content/uploads/2019/09/zimbra-monitoring-grafana-001.png))
+![alt tag](https://www.jorgedelacruz.es/wp-content/uploads/2019/09/zimbra-monitoring-grafana-001.png)
 
 *Note: This project is a Community contribution, not tested neither supported officialy by Zimbra. Use it at your own risk. 
 
