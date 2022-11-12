@@ -41,7 +41,7 @@ This is just a v0.3 of this Dashboard, the next step will be to use the Zimbra S
 * etc.
 
 ### Collector Config
-Sample /etc/telegraf.d/zimbra.conf with inputs for Zimbra Processes, Zimbra Scripts, and Linux System Monitoring:
+Sample /etc/telegraf/telegraf.d/zimbra.conf with inputs for Zimbra Processes, Zimbra Scripts, and Linux System Monitoring:
 
 ```
 # Read metrics about cpu usage
