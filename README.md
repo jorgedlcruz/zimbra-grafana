@@ -10,10 +10,20 @@ How to monitor a Zimbra Collaboration Environment using pflogsumm, Telegraf, Inf
 ### Getting started
 This dashboard contains multiples sections with the goal to monitor a full Zimbra Collaboration Server or Servers, we have some sections to monitor the Linux and machine overall performance, and one dedicated section just to monitor Zimbra Collaboration. Special thanks to [Lex Rivera for his Linux System dashboard](https://grafana.com/orgs/lex)
 
-Download the checkzimbraversion.sh scripts from the [GitHub repository](https://github.com/jorgedlcruz/zimbra-grafana) and save it on the next path: 
-```
-/opt/zimbra/common/bin/checkzimbraversion.sh
-chmod +x /opt/zimbra/common/bin/checkzimbraversion.sh
+Create checkzimbraversion.sh scripts from the [GitHub repository](https://github.com/jorgedlcruz/zimbra-grafana) and save it on the next path: 
+```bash
+cat << EOF | sudo tee /opt/zimbra/common/bin/checkzimbraversion.sh
+#!/bin/bash
+if [ -f /etc/redhat-release ]; then
+  rpm -q --queryformat "%{version}" zimbra-core | awk -F. '{print \$1"."\$2"."\$3 }' | awk -F_ '{print \$1" "\$2 }'
+fi
+
+if [ -f /etc/lsb-release ]; then
+  dpkg -s zimbra-core | awk -F"[ ',]+" '/Version:/{print \$2}' | awk -F. '{print \$1"."\$2"."\$3" "\$4}'
+fi
+EOF
+sudo chown zimbra:zimbra /opt/zimbra/common/bin/checkzimbraversion.sh
+sudo chmod a+x /opt/zimbra/common/bin/checkzimbraversion.sh
 ```
 More information available in: [https://github.com/jorgedlcruz/zimbra-grafana](https://github.com/jorgedlcruz/zimbra-grafana)
 
@@ -108,6 +118,27 @@ Sample /etc/telegraf/telegraf.d/zimbra.conf with inputs for Zimbra Processes, Zi
     queue_directory = "/opt/zimbra/data/postfix/spool"
     interval = "1s"
 ```
+
+### Permission fixes
+Requires `acl` installed (`apt install acl` or `yum install acl`):
+
+```bash
+sudo setfacl -Rm g:telegraf:rX /opt/zimbra/data/postfix/spool/
+sudo setfacl -dm g:telegraf:rX /opt/zimbra/data/postfix/spool/
+sudo systemctl restart telegraf
+```
+
+Alternatively add telegraf to respective groups and change zimbra directory permissions
+
+```bash
+sudo usermod -aG postfix telegraf
+sudo usermod -aG postdrop telegraf
+sudo usermod -aG zimbra telegraf
+sudo chmod g+r /opt/zimbra/data/postfix/spool/maildrop
+sudo chmod -R g+rXs /opt/zimbra/data/postfix/spool/{active,hold,incoming,deferred}
+sudo systemctl restart telegraf
+```
+
 
 * Download the grafana-zimbra-collaboration-dashboard.json JSON file and import it into your Grafana
 * Change your data inside the Grafana if needed and enjoy :)
